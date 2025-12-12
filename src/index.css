@@ -1,0 +1,81 @@
+@import url('https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+Antique:wght@300;400;500;700;900&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-zen: "Zen Kaku Gothic Antique", sans-serif;
+}
+
+body {
+  font-family: var(--font-zen);
+  font-weight: 400; /* regular */
+}
+
+/* Optional: Untuk custom class font weight */
+.font-zen-light {
+  font-family: var(--font-zen);
+  font-weight: 300;
+}
+
+.font-zen-medium {
+  font-family: var(--font-zen);
+  font-weight: 500;
+}
+
+.font-zen-bold {
+  font-family: var(--font-zen);
+  font-weight: 700;
+}
+
+.font-zen-black {
+  font-family: var(--font-zen);
+  font-weight: 900;
+}
+/* Hilangkan icon mata browser default */
+input[type="password"]::-webkit-credentials-auto-fill-button {
+  display: none !important;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* Untuk Chrome, Safari */
+input[type="password"]::-webkit-strong-password-auto-fill-button {
+  display: none !important;
+}
+
+/* Untuk Microsoft Edge */
+input[type="password"]::-ms-reveal {
+  display: none !important;
+}
+
+input[type="password"]::-ms-clear {
+  display: none !important;
+}
+/* Fix untuk Leaflet */
+.leaflet-container {
+  height: 100vh;
+  width: 100%;
+}
+
+/* Remove default marker icons issue */
+.leaflet-default-icon-path {
+  background-image: url(https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png);
+}
+/* Tambahkan kode ini ke file CSS utama Anda (misalnya index.css) */
+
+/* Menghilangkan background putih dan padding default pada wrapper konten Leaflet */
+.leaflet-popup-content-wrapper {
+    background: transparent !important; /* Membuat wrapper transparan */
+    color: #333; /* Warna teks default */
+    border-radius: 10px; /* Jaga border radius agar sesuai dengan desain */
+    padding: 0; /* Menghilangkan padding bawaan Leaflet */
+}
+
+/* Menghilangkan shadow dan border bawaan Leaflet */
+.leaflet-popup-tip-container {
+    visibility: hidden; /* Menyembunyikan elemen panah (tip) */
+}
+
+/* Menghilangkan shadow pada popup */
+.leaflet-popup {
+    box-shadow: none; /* Menghapus bayangan (shadow) bawaan */
+}
