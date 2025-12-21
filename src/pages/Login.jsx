@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 
 // Assets (Pastikan path ini sudah benar)
@@ -7,6 +7,8 @@ import vectorImg from "../assets/vector.png";
 import googleIcon from "../assets/google.png";
 import appleIcon from "../assets/apple.png";
 import facebookIcon from "../assets/facebook.png";
+
+import api, { setToken } from "../services/api";
 
 const Login = () => {
     // State
@@ -17,6 +19,8 @@ const Login = () => {
     const [errors, setErrors] = useState({});
     const [apiError, setApiError] = useState("");
     const [loading, setLoading] = useState(false);
+
+    const navigate = useNavigate();
 
     // --- VARIABEL CSS ASLI (untuk referensi saja, tapi kita pakai di Tailwind) ---
     // --primary-blue: #76A4FA;
@@ -57,26 +61,16 @@ const Login = () => {
         setApiError("");
 
         try {
-            // ... Logika API call tetap sama ...
-            console.log("Simulasi Login:", { email, password, rememberMe });
-
-            // SIMULASI API RESPONSE
-            await new Promise(resolve => setTimeout(resolve, 1500));
-
-            if (email === "error@example.com") {
-                setApiError("Login failed. Please check your credentials.");
-                setLoading(false);
-                return;
+            const { data } = await api.post("/auth/login", { email, password });
+            if (data?.token) {
+                setToken(data.token);
             }
-
-            // Login berhasil
-            // Simpan token, redirect, dll.
-            alert("Login successful! Redirecting to /home...");
-            // window.location.href = "/home"; // Uncomment ini saat live
+            // Redirect: sesuaikan route home kamu
+            navigate("/");
 
         } catch (error) {
             console.error("NETWORK ERROR:", error);
-            setApiError("Unable to connect to the server. Please try again later.");
+            setApiError(error?.friendlyMessage || "Unable to connect to the server. Please try again later.");
         }
 
         setLoading(false);

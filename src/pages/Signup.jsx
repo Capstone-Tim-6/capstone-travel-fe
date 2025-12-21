@@ -8,6 +8,8 @@ import googleIcon from "../assets/google.png";
 import appleIcon from "../assets/apple.png";
 import facebookIcon from "../assets/facebook.png";
 
+import api from "../services/api";
+
 
 const Signup = () => {
 
@@ -72,30 +74,13 @@ const Signup = () => {
         setLoading(true);
 
         try {
-            // Mengganti dengan endpoint API sebenarnya
-            const response = await fetch("https://YOUR_API_URL_HERE/auth/register", { 
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    name: firstName,
-                    email: email,
-                    password: password,
-                }),
+            // Backend: POST /api/auth/signup
+            const { data } = await api.post("/auth/signup", {
+                first_name: firstName,
+                last_name: "",
+                email,
+                password,
             });
-
-            const data = await response.json();
-
-            // Jika status gagal (400/422/500) 
-            if (!response.ok) {
-                setErrors((prev) => ({
-                    ...prev,
-                    email: data.message || "Registration failed. Please try again."
-                }));
-                setLoading(false);
-                return;
-            }
 
             console.log("REGISTER SUCCESS:", data);
 
@@ -107,7 +92,7 @@ const Signup = () => {
 
             setErrors((prev) => ({
                 ...prev,
-                general: "Unable to connect to the server. Please try again later."
+                general: err?.friendlyMessage || "Unable to connect to the server. Please try again later."
             }));
         }
 
