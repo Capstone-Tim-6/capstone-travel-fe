@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom'; // Tambahkan useNavigate
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 
 // Assets (Pastikan path ini sudah benar)
@@ -9,6 +9,9 @@ import appleIcon from "../assets/apple.png";
 import facebookIcon from "../assets/facebook.png";
 
 const Login = () => {
+    // Tambahkan useNavigate hook
+    const navigate = useNavigate();
+    
     // State
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -17,12 +20,6 @@ const Login = () => {
     const [errors, setErrors] = useState({});
     const [apiError, setApiError] = useState("");
     const [loading, setLoading] = useState(false);
-
-    // --- VARIABEL CSS ASLI (untuk referensi saja, tapi kita pakai di Tailwind) ---
-    // --primary-blue: #76A4FA;
-    // --sub-text-color: #424242;
-    // --radius: 50px;
-    // --------------------------------------------------------------------------
 
     // VALIDASI
     const validateForm = () => {
@@ -47,7 +44,7 @@ const Login = () => {
         return Object.keys(newErrors).length === 0;
     };
 
-    // SUBMIT LOGIN
+    // SUBMIT LOGIN - MODIFIED
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -57,29 +54,48 @@ const Login = () => {
         setApiError("");
 
         try {
-            // ... Logika API call tetap sama ...
-            console.log("Simulasi Login:", { email, password, rememberMe });
+            // Logika API call
+            console.log("Login attempt:", { email, password, rememberMe });
 
-            // SIMULASI API RESPONSE
+            // SIMULASI API RESPONSE (3 detik)
             await new Promise(resolve => setTimeout(resolve, 1500));
 
+            // Simulasi kondisi error
             if (email === "error@example.com") {
                 setApiError("Login failed. Please check your credentials.");
                 setLoading(false);
                 return;
             }
 
-            // Login berhasil
-            // Simpan token, redirect, dll.
-            alert("Login successful! Redirecting to /home...");
-            // window.location.href = "/home"; // Uncomment ini saat live
-
+            // SIMULASI LOGIN BERHASIL
+            // Biasanya di sini Anda akan:
+            // 1. Menyimpan token/auth data di localStorage/sessionStorage
+            // 2. Mengupdate state global (jika menggunakan Redux/Context)
+            // 3. Redirect ke halaman home
+            
+            // Contoh menyimpan data login
+            if (rememberMe) {
+                localStorage.setItem('rememberMe', 'true');
+            }
+            
+            // Simpan token (dummy untuk contoh)
+            localStorage.setItem('authToken', 'dummy-token-12345');
+            localStorage.setItem('userEmail', email);
+            
+            // Tampilkan alert
+            alert("Login successful! Redirecting to home page...");
+            
+            // REDIRECT KE HOMEPAGE
+            navigate('/'); // Ganti '/home' dengan path HomePage Anda
+            
         } catch (error) {
             console.error("NETWORK ERROR:", error);
             setApiError("Unable to connect to the server. Please try again later.");
+            setLoading(false);
         }
-
-        setLoading(false);
+        
+        // Note: setLoading(false) tidak dipanggil di sini karena 
+        // sudah di-handle dalam navigate (komponen akan unmount)
     };
 
     // Style untuk input Email (border hitam) dan Password (border abu muda)
@@ -96,12 +112,10 @@ const Login = () => {
         <div className="w-full min-h-screen pt-4 pr-2 pb-4 pl-2 flex bg-white justify-center items-center overflow-hidden">
 
             {/* login-container */}
-            {/* Catatan: Di layar > 1024px, lebar asli 344px + 632px = 976px. Tapi di media query 1024px, dia jadi column */}
             <div className="w-[976px] h-auto flex justify-center items-center gap-0 
                             lg:flex-row flex-col lg:max-w-none max-w-[650px] lg:w-auto w-full">
 
                 {/* PANEL KIRI (left-side) */}
-                {/* W: 632px, H: 618px, Radius: 50px, Background: #76A4FA */}
                 <div className="
                     hidden lg:flex 
                     w-[632px] h-[618px] 
@@ -112,7 +126,6 @@ const Login = () => {
                     overflow-hidden 
                     shadow-[0_82px_40px_-14px_rgba(100,100,100,0.0784)]
                 ">
-                    {/* Gambar vector-img */}
                     <img
                         src={vectorImg}
                         alt="Travel Vector"
@@ -124,7 +137,6 @@ const Login = () => {
                 </div>
 
                 {/* PANEL KANAN (login-form-box) */}
-                {/* W: 604px, H: 618px, Radius: 50px, Border: 1px #E0E0E0 */}
                 <div className="
                     w-full lg:w-[604px] h-auto lg:h-[618px] 
                     bg-white 
@@ -228,7 +240,6 @@ const Login = () => {
                             </p>
                         )}
 
-
                         {/* Remember Me */}
                         <div className="flex gap-2 items-center mt-[30px] mb-[10px] h-[22px]">
                             <input
@@ -251,21 +262,22 @@ const Login = () => {
                         <button
                             type="submit"
                             className="
-        w-full lg:w-[380px] h-[64px] 
-        bg-[#212121] hover:bg-white 
-        border-none 
-        font-[Zen_Kaku_Gothic_Antique] text-base 
-        font-normal text-white hover:text-[#212121] 
-        leading-[28.16px] text-center 
-        cursor-pointer 
-        transition duration-200
-        disabled:opacity-50 disabled:cursor-not-allowed
-    "
+                                w-full lg:w-[380px] h-[64px] 
+                                bg-[#212121] hover:bg-white 
+                                border-none 
+                                font-[Zen_Kaku_Gothic_Antique] text-base 
+                                font-normal text-white hover:text-[#212121] 
+                                leading-[28.16px] text-center 
+                                cursor-pointer 
+                                transition duration-200
+                                disabled:opacity-50 disabled:cursor-not-allowed
+                            "
                             disabled={loading}
                         >
                             {loading ? "Processing..." : "PROCEED"}
                         </button>
                     </form>
+                    
                     <div className="text-center mt-4">
                         <Link
                             to="/signup"
@@ -274,22 +286,6 @@ const Login = () => {
                             Back to Daftar
                         </Link>
                     </div>
-
-                    {/* <div className="text-center relative mt-[1px]">
-                        <span className="
-                            font-[Zen_Kaku_Gothic_Antique] text-[12.8px] 
-                            font-normal text-black 
-                            leading-[22.53px]"
-                        >
-                            OR USE
-                        </span>
-                    </div> */}
-
-                    {/* <div className="w-[170px] h-10 mx-auto flex gap-[25px] items-center">
-                        <img src={googleIcon} alt="Google" className="w-10 h-10 cursor-pointer border border-[#EEEEEE]" />
-                        <img src={appleIcon} alt="Apple" className="w-10 h-10 cursor-pointer border border-[#EEEEEE]" />
-                        <img src={facebookIcon} alt="Facebook" className="w-10 h-10 cursor-pointer border border-[#EEEEEE]" />
-                    </div> */}
                 </div>
             </div>
         </div>

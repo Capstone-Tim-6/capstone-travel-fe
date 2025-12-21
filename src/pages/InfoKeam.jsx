@@ -1,14 +1,26 @@
-// src/components/InfoKeam.jsx - Versi Satuan dengan Modal Internal (Rating Bintang Permanen)
+// src/components/InfoKeam.jsx - Versi dengan Gambar Lokal
 
 import React, { useState } from 'react';
-// Perbaikan import sesuai error sebelumnya
+// Import Icons
 import { 
     IoSearchOutline, IoFlashOutline, IoShieldOutline, IoClipboardOutline, 
     IoStar, IoHeartOutline, IoChatbubbleOutline, IoAlertCircle, 
     IoInformationCircle, IoCameraOutline 
 } from 'react-icons/io5'; 
-import { IoMdStar, IoMdStarOutline } from 'react-icons/io'; // Import IoMdStar dari 'react-icons/io'
+import { IoMdStar, IoMdStarOutline } from 'react-icons/io';
 import { FaHeart } from 'react-icons/fa'; 
+
+// --- IMPORT GAMBAR LOKAL dari src/assets ---
+// Header Destinasi
+import headerImage from "../assets/TB.webp";
+
+// Galeri Foto
+import playgroundImage from "../assets/TBA.webp";        // taman bermain anak
+import pathImage from "../assets/JS.webp";               // jalan setapak
+import greeneryImage from "../assets/PH.webp";           // pemandangan hijau
+import pondImage from "../assets/KI.webp";               // kolam ikan
+import fountainImage from "../assets/AM.webp";           // air mancur
+import foodImage from "../assets/AK.webp";              // area kuliner
 
 // --- Data Dummy ---
 
@@ -19,13 +31,14 @@ const review = {
     likes: 128
 };
 
+// Data galeri dengan gambar lokal
 const photoGallery = [
-    { id: 1, src: "placeholder_playground.jpg", alt: "Area bermain anak" },
-    { id: 2, src: "placeholder_fountain.jpg", alt: "Air mancur taman" },
-    { id: 3, src: "placeholder_greenery.jpg", alt: "Pemandangan hijau" },
-    { id: 4, src: "placeholder_path.jpg", alt: "Jalan setapak" },
-    { id: 5, src: "placeholder_food.jpg", alt: "Area kuliner" },
-    { id: 6, src: "placeholder_pond.jpg", alt: "Kolam ikan" },
+    { id: 1, src: playgroundImage, alt: "Area bermain anak", label: "Taman Bermain" },
+    { id: 2, src: fountainImage, alt: "Air mancur taman", label: "Air Mancur" },
+    { id: 3, src: greeneryImage, alt: "Pemandangan hijau", label: "Pemandangan Hijau" },
+    { id: 4, src: pathImage, alt: "Jalan setapak", label: "Jalan Setapak" },
+    { id: 5, src: foodImage, alt: "Area kuliner", label: "Area Kuliner" },
+    { id: 6, src: pondImage, alt: "Kolam ikan", label: "Kolam Ikan" },
 ];
 
 // --- Komponen Modal Laporan Internal ---
@@ -107,7 +120,7 @@ const ReportReviewModalInternal = ({ isOpen, onClose, locationName = "Lokasi" })
                         <input type="file" className="hidden" accept="image/*,video/*" />
                     </div>
 
-                    {/* Rating Bintang (Sekarang tanpa kondisi, selalu muncul) */}
+                    {/* Rating Bintang */}
                     <div className='pt-2'>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
                             Rating
@@ -176,9 +189,10 @@ const InfoKeam = () => {
                 
                 {/* 1. Header Destinasi (Gambar, Judul, Rating) */}
                 <header className="relative w-full h-64 md:h-80 rounded-xl overflow-hidden shadow-lg">
+                    {/* Gunakan gambar lokal */}
                     <div 
                         className="w-full h-full bg-cover bg-center" 
-                        style={{ backgroundImage: 'url(https://via.placeholder.com/1200x500/A3C7E1/666666?text=Placeholder+Image+Taman+Bungkul)' }} 
+                        style={{ backgroundImage: `url(${headerImage})` }} 
                     >
                         <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
                     </div>
@@ -269,30 +283,49 @@ const InfoKeam = () => {
                             </div>
                         </div>
 
-                        {/* Kolom Kanan: Galeri Foto */}
+                        {/* Kolom Kanan: Galeri Foto dengan Gambar Lokal */}
                         <div className="lg:col-span-2">
                             <h4 className="font-bold text-lg mb-4 text-gray-900">Galeri Foto</h4>
-                            <div className="grid grid-cols-3 gap-3">
-                                {photoGallery.map((photo, index) => (
+                            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                                {photoGallery.map((photo) => (
                                     <div 
                                         key={photo.id} 
-                                        className="w-full h-24 sm:h-32 bg-gray-300 rounded-lg overflow-hidden cursor-pointer hover:opacity-90 transition-opacity"
+                                        className="relative w-full h-24 sm:h-32 rounded-lg overflow-hidden cursor-pointer hover:opacity-90 transition-opacity shadow-md group"
                                     >
+                                        {/* Gambar dari lokal */}
                                         <img 
-                                            src={`https://via.placeholder.com/150/A3C7E1/666666?text=Foto+${index + 1}`} 
+                                            src={photo.src} 
                                             alt={photo.alt} 
                                             className="w-full h-full object-cover"
                                         />
+                                        {/* Overlay dengan label */}
+                                        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-2">
+                                            <p className="text-white text-xs font-medium truncate">{photo.label}</p>
+                                        </div>
                                     </div>
                                 ))}
                             </div>
+                            
+                            {/* Info tambahan jika gambar tidak muncul */}
+                            {/* <div className="mt-4 text-sm text-gray-500">
+                                <p>Pastikan file gambar berada di folder <code>src/assets/</code> dengan nama yang sesuai:</p>
+                                <ul className="list-disc ml-5 mt-1">
+                                    <li>TB.webp (Header)</li>
+                                    <li>TBA.webp (Taman Bermain)</li>
+                                    <li>JS.webp (Jalan Setapak)</li>
+                                    <li>PH.webp (Pemandangan Hijau)</li>
+                                    <li>KI.webp (Kolam Ikan)</li>
+                                    <li>AM.webp (Air Mancur)</li>
+                                    <li>ALK.webp (Area Kuliner)</li>
+                                </ul>
+                            </div> */}
                         </div>
                     </div>
                 </section>
                 
             </div>
 
-            {/* Modal Laporan/Ulasan (Dipanggil di akhir file agar selalu di atas) */}
+            {/* Modal Laporan/Ulasan */}
             <ReportReviewModalInternal 
                 isOpen={isModalOpen} 
                 onClose={() => setIsModalOpen(false)} 

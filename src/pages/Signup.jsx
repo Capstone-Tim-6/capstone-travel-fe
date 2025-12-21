@@ -2,29 +2,23 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 
-// Assets (Pastikan path ini sudah benar)
-import vectorImg from "../assets/vector1.png"; // Asumsi menggunakan vector1.png
-import googleIcon from "../assets/google.png";
-import appleIcon from "../assets/apple.png";
-import facebookIcon from "../assets/facebook.png";
-
+// Assets
+import vectorImg from "../assets/vector1.png";
 
 const Signup = () => {
-
     // STATE INPUT
     const [firstName, setFirstName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
-    // STATE TAMBAHAN UNTUK INTEGRASI API
+    // STATE TAMBAHAN
     const [agreement, setAgreement] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const [errors, setErrors] = useState({});
     const [loading, setLoading] = useState(false);
+    const [apiError, setApiError] = useState(""); // Tambah state untuk error API
 
     const navigate = useNavigate();
-
-    // WARNA UTAMA: --primary-blue: #76A4FA;
 
     // === HANDLE FIRSTNAME ===
     const handleFirstNameChange = (e) => {
@@ -33,7 +27,6 @@ const Signup = () => {
             setErrors((prev) => ({ ...prev, firstName: null }));
         }
     };
-
 
     // === VALIDASI SIMPLE ===
     const validateForm = () => {
@@ -60,10 +53,10 @@ const Signup = () => {
         return Object.keys(newErrors).length === 0;
     };
 
-
-    // === INTEGRASI API REGISTER ===
+    // === INTEGRASI API REGISTER YANG DIUPDATE ===
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setApiError("");
 
         if (!validateForm()) {
             return;
@@ -72,8 +65,69 @@ const Signup = () => {
         setLoading(true);
 
         try {
-            // Mengganti dengan endpoint API sebenarnya
-            const response = await fetch("https://YOUR_API_URL_HERE/auth/register", { 
+            // SIMULASI API CALL - GANTI DENGAN API ASLI
+            console.log("Register attempt:", { firstName, email, password });
+
+            // SIMULASI PROSES REGISTRASI (1.5 detik)
+            await new Promise(resolve => setTimeout(resolve, 1500));
+
+            // SIMULASI KONDISI BERHASIL/ERROR
+            if (email === "error@example.com") {
+                // Simulasi error untuk email tertentu
+                setApiError("Registration failed. Email might already be registered.");
+                setLoading(false);
+                return;
+            }
+
+            // ============================================
+            // REGISTRASI BERHASIL - SIMULASI
+            // ============================================
+            
+            // 1. Simpan data user di localStorage (opsional, untuk simulasi)
+            const userData = {
+                name: firstName,
+                email: email,
+                registeredAt: new Date().toISOString()
+            };
+            
+            localStorage.setItem('userData', JSON.stringify(userData));
+            
+            // 2. Simpan token auth (dummy)
+            localStorage.setItem('authToken', 'dummy-token-' + Date.now());
+            
+            // 3. Tampilkan pesan sukses
+            alert("Registration successful! You are now being redirected to login.");
+            
+            // 4. REDIRECT LANGSUNG KE HOME PAGE
+            navigate('/login'); // Arahkan ke login
+            
+            // Catatan: Tidak perlu setLoading(false) karena komponen akan di-unmount
+
+        } catch (err) {
+            console.error("REGISTER FAILED:", err);
+            
+            // Handle network errors
+            setApiError("Unable to connect to the server. Please try again later.");
+            setLoading(false);
+        }
+        
+        // Jika menggunakan API asli, letakkan setLoading(false) di sini:
+        // setLoading(false);
+    };
+
+    // === CONTOH INTEGRASI API ASLI (jika punya API endpoint) ===
+    /*
+    const handleSubmitRealAPI = async (e) => {
+        e.preventDefault();
+        
+        if (!validateForm()) return;
+        
+        setLoading(true);
+        setApiError("");
+
+        try {
+            // Ganti dengan endpoint API sebenarnya
+            const response = await fetch("https://api.anda.com/auth/register", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -87,33 +141,28 @@ const Signup = () => {
 
             const data = await response.json();
 
-            // Jika status gagal (400/422/500) 
             if (!response.ok) {
-                setErrors((prev) => ({
-                    ...prev,
-                    email: data.message || "Registration failed. Please try again."
-                }));
+                setApiError(data.message || "Registration failed. Please try again.");
                 setLoading(false);
                 return;
             }
 
-            console.log("REGISTER SUCCESS:", data);
-
-            // Redirect ke halaman Login
-            navigate("/login"); 
-
+            // Registrasi berhasil
+            // 1. Simpan token/auth data
+            localStorage.setItem('authToken', data.token);
+            localStorage.setItem('userData', JSON.stringify(data.user));
+            
+            // 2. Redirect ke home page
+            alert("Registration successful!");
+            navigate('/home');
+            
         } catch (err) {
-            console.error("REGISTER FAILED:", err);
-
-            setErrors((prev) => ({
-                ...prev,
-                general: "Unable to connect to the server. Please try again later."
-            }));
+            console.error("REGISTER ERROR:", err);
+            setApiError("Network error. Please check your connection.");
+            setLoading(false);
         }
-
-        setLoading(false);
     };
-
+    */
 
     // Border Class Helper
     const firstNameBorderClass = errors.firstName 
@@ -128,16 +177,14 @@ const Signup = () => {
         ? "border-red-600 focus-within:border-red-600"
         : "border-[#E0E0E0] focus-within:border-[#212121]";
 
-
     return (
-        // signup-wrapper
         <div className="w-full min-h-screen pt-4 pr-2 pb-4 pl-2 flex bg-white justify-center items-center overflow-hidden">
             
             {/* signup-container */}
             <div className="w-[976px] h-auto flex justify-center items-center gap-0 
                             lg:flex-row flex-col lg:max-w-none max-w-[650px] w-full">
 
-                {/* LEFT FORM (signup-form-box) - W: 596px, H: 618px */}
+                {/* LEFT FORM (signup-form-box) */}
                 <div className="
                     w-full lg:w-[596px] h-auto lg:h-[618px] 
                     bg-white 
@@ -262,6 +309,13 @@ const Signup = () => {
                             )}
                         </div>
                         
+                        {/* ERROR DARI API */}
+                        {apiError && (
+                            <p className="error-text text-[#D32F2F] font-[Zen_Kaku_Gothic_Antique] text-sm font-light leading-snug mt-1 flex items-center gap-1">
+                                <span role="img" aria-label="Warning">⚠</span>{apiError}
+                            </p>
+                        )}
+                        
                         {/* AGREEMENT */}
                         <div className="flex gap-2 items-center mt-[30px] mb-[10px] h-[22px]">
                             <input
@@ -286,20 +340,19 @@ const Signup = () => {
                             </p>
                         )}
 
-
                         {/* BUTTON */}
                         <button 
                             type="submit" 
                             className="
-                                 w-full lg:w-[380px] h-[64px] 
-        bg-[#212121] hover:bg-white 
-        border-none 
-        font-[Zen_Kaku_Gothic_Antique] text-base 
-        font-normal text-white hover:text-[#212121] 
-        leading-[28.16px] text-center 
-        cursor-pointer 
-        transition duration-200
-        disabled:opacity-50 disabled:cursor-not-allowed
+                                w-full lg:w-[380px] h-[64px] 
+                                bg-[#212121] hover:bg-white 
+                                border-none 
+                                font-[Zen_Kaku_Gothic_Antique] text-base 
+                                font-normal text-white hover:text-[#212121] 
+                                leading-[28.16px] text-center 
+                                cursor-pointer 
+                                transition duration-200
+                                disabled:opacity-50 disabled:cursor-not-allowed
                             " 
                             disabled={loading}
                         >
@@ -307,26 +360,18 @@ const Signup = () => {
                         </button>
                     </form>
 
-                    {/* <div className="text-center relative mt-[1px]">
-                        <span className="
-                            font-[Zen_Kaku_Gothic_Antique] text-[12.8px] 
-                            font-normal text-black 
-                            leading-[22.53px]"
+                    {/* Link ke Login (opsional) */}
+                    {/* <div className="text-center mt-4">
+                        <Link
+                            to="/login"
+                            className="text-sm font-[Zen_Kaku_Gothic_Antique] text-black underline"
                         >
-                            OR
-                        </span>
-                    </div>
-
-                    <div className="w-[170px] h-10 mx-auto flex gap-[25px] items-center">
-                        <img src={googleIcon} alt="Google" className="w-10 h-10 cursor-pointer border border-[#EEEEEE]" />
-                        <img src={appleIcon} alt="Apple" className="w-10 h-10 cursor-pointer border border-[#EEEEEE]" />
-                        <img src={facebookIcon} alt="Facebook" className="w-10 h-10 cursor-pointer border border-[#EEEEEE]" />
+                            Already have an account? Login here
+                        </Link>
                     </div> */}
                 </div>
 
-
                 {/* PANEL KANAN (right-side) - Gambar */}
-                {/* W: 632px, H: 618px, Radius: 50px di kiri, Background: #76A4FA */}
                 <div className="
                     hidden lg:flex 
                     w-[632px] h-[618px] 
@@ -337,7 +382,6 @@ const Signup = () => {
                     overflow-hidden 
                     shadow-[0_82px_40px_-14px_rgba(100,100,100,0.0784)]
                 ">
-                    {/* Gambar vector-img */}
                     <img 
                         src={vectorImg} 
                         alt="Travel Vector" 
