@@ -1,7 +1,7 @@
 // api.js - TIDAK ada JSX di sini, murni JavaScript
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_API_URL || "https://api.travsecure.id";
+const API_URL = import.meta.env.VITE_API_URL || "https://travbe.vercel.app";
 
 const api = axios.create({
   baseURL: API_URL,
