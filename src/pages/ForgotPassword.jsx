@@ -4,6 +4,8 @@ import { Link, useNavigate } from 'react-router-dom';
 // Assets (Pastikan path ini sudah benar)
 import vectorImg from "../assets/vector1.png"; // Asumsi menggunakan vector1.png
 
+import api from "../services/api";
+
 // CONSTANT UNTUK TIMER OTP
 const RESEND_TIMER_SECONDS = 60;
 
@@ -95,8 +97,7 @@ const ForgotPassword = () => {
         setErrors({});
 
         try {
-            console.log("Simulasi mengirim OTP ke:", email);
-            await new Promise(resolve => setTimeout(resolve, 2000)); 
+            await api.post("/auth/forgot-password", { email });
             
             // Jika berhasil:
             setOtpSent(true); 
@@ -106,7 +107,7 @@ const ForgotPassword = () => {
 
         } catch (err) {
             console.error("SEND OTP FAILED:", err);
-            setErrors({ general: "Failed to send OTP. Please try again." });
+            setErrors({ general: err?.friendlyMessage || "Failed to send OTP. Please try again." });
         }
         setLoading(false);
     };
@@ -124,17 +125,15 @@ const ForgotPassword = () => {
         setLoading(true);
 
         try {
-            // SIMULASI VERIFIKASI OTP
-            console.log("Simulasi Verifikasi OTP:", { email, otp });
-            await new Promise(resolve => setTimeout(resolve, 2000));
+            await api.post("/auth/verify-otp", { email, otp });
 
             // Jika berhasil, navigasi ke halaman reset password
             alert("OTP Verified! Redirecting to Reset Password...");
-            navigate("/reset-password"); 
+            navigate("/reset-password", { state: { email, otp } }); 
 
         } catch (err) {
             console.error("VERIFY FAILED:", err);
-            setErrors({ otp: "Invalid or expired OTP. Please try again." });
+            setErrors({ otp: err?.friendlyMessage || "Invalid or expired OTP. Please try again." });
         }
         setLoading(false);
     };

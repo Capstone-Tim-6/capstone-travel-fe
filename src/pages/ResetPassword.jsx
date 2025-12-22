@@ -5,6 +5,8 @@ import { FaRegEye, FaRegEyeSlash } from "react-icons/fa"; // Import ikon mata
 // Assets (Pastikan path ini sudah benar)
 import vectorImg from "../assets/vector1.png"; // Asumsi menggunakan vector1.png
 
+import api from "../services/api";
+
 const ResetPassword = () => {
     // State
     const [newPassword, setNewPassword] = useState('');
@@ -20,7 +22,8 @@ const ResetPassword = () => {
     const navigate = useNavigate();
     const location = useLocation();
     // Asumsi: email dibawa dari halaman ForgotPassword
-    const email = location.state?.email || 'user@example.com'; 
+    const email = location.state?.email || 'user@example.com';
+    const otp = location.state?.otp;
 
     // === VALIDASI FORM ===
     const validateForm = () => {
@@ -61,9 +64,13 @@ const ResetPassword = () => {
         setLoading(true);
 
         try {
-            // SIMULASI API call untuk mereset password
-            console.log("Simulasi Reset Password untuk:", email);
-            await new Promise(resolve => setTimeout(resolve, 2000));
+            if (!otp) {
+                setErrors({ general: "OTP tidak ditemukan. Silakan ulangi proses Forgot Password." });
+                setLoading(false);
+                return;
+            }
+
+            await api.post("/auth/reset-password", { email, otp, password: newPassword });
 
             // Jika berhasil
             alert("Password successfully reset! Redirecting to Login...");
@@ -71,7 +78,7 @@ const ResetPassword = () => {
 
         } catch (error) {
             console.error("RESET FAILED:", error);
-            setErrors({ general: "Failed to reset password. Please try again." });
+            setErrors({ general: error?.friendlyMessage || "Failed to reset password. Please try again." });
         }
 
         setLoading(false);

@@ -11,6 +11,7 @@ import MainLayout from './pages/MainLayout';
 import InKeamanan from './pages/InKeamanan';
 import Peta from './pages/Peta';
 import Profile from './pages/Profile';
+import Dashboard from './pages/Dashboard';
 import { PiMetaLogo } from 'react-icons/pi';
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
 
         <Routes>
           <Route path="/" element={<MainLayout> <HomePage /> </MainLayout>}/>
+          <Route path="/beranda" element={<MainLayout> <Dashboard/> </MainLayout>}/>
           <Route path="/destinasi" element={<MainLayout> <Destinasi /> </MainLayout>}/>
           <Route path="/info-keamanan" element={<MainLayout> <InKeamanan /> </MainLayout>} />
           <Route path="/peta-keamanan" element={<MainLayout> <Peta /> </MainLayout>} />

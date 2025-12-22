@@ -99,7 +99,7 @@ const Signup = () => {
             alert("Registration successful! You are now being redirected to login.");
             
             // 4. REDIRECT LANGSUNG KE HOME PAGE
-            navigate('/login'); // Arahkan ke login
+            navigate('/login'); // Arahkan ke HomePage
             
             // Catatan: Tidak perlu setLoading(false) karena komponen akan di-unmount
 
