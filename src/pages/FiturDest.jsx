@@ -5,6 +5,13 @@ import {
     IoRefreshOutline, IoClose 
 } from 'react-icons/io5';
 
+// --- IMPORT GAMBAR LOKAL SESUAI ASSETS ---
+import imgBanjir from '../assets/1.Bajir.png';
+import imgCopet from '../assets/2.copet.jpg';
+import imgCuaca from '../assets/3.Cuacaektrim.webp';
+import imgMacet from '../assets/4.macet.jpg';
+import imgPohon from '../assets/5.pohontumbang.jpeg';
+
 // --- DATA DUMMY INSIDEN KHUSUS SURABAYA (SBY) ---
 const initialIncidentData = [
   { 
@@ -16,8 +23,7 @@ const initialIncidentData = [
     severity: 'Tinggi', 
     description: 'Genangan air setinggi 40cm akibat luapan saluran drainase. Kendaraan roda dua diimbau menghindari jalur arah Embong Malang.',
     status: 'Aktif',
-    // Gambar banjir Surabaya (Basuki Rahmat/Pusat)
-    image: 'https://awsimages.detik.net.id/community/media/visual/2024/02/05/banjir-di-jalan-basuki-rahmat-surabaya-senin-522024_169.jpeg?w=700&q=90'
+    image: imgBanjir // Menggunakan 1.Bajir.png
   },
   { 
     id: 2, 
@@ -28,8 +34,7 @@ const initialIncidentData = [
     severity: 'Sedang', 
     description: 'Laporan kehilangan ponsel di kerumunan bus malam. Pelaku terlihat melarikan diri ke arah jalur keberangkatan antar kota.',
     status: 'Waspada',
-    // Gambar keramaian Terminal Purabaya
-    image: 'https://asset.kompas.com/crops/O_n8I_D0mBf8Ww6Hj_G-m0W-uX0=/0x0:1000x667/750x500/data/photo/2023/04/19/643f6630a9e7f.jpg'
+    image: imgCopet // Menggunakan 2.copet.jpg
   },
   { 
     id: 3, 
@@ -40,8 +45,7 @@ const initialIncidentData = [
     severity: 'Rendah', 
     description: 'Hujan disertai angin kencang merobohkan beberapa dahan pohon di area kuliner. Tim kebersihan kota sedang menuju lokasi.',
     status: 'Pantauan',
-    // Gambar suasana jalanan Surabaya Barat/Citraland saat badai
-    image: 'https://infopublik.id/assets/upload/headline/IMG_20220107_174418.jpg'
+    image: imgCuaca // Menggunakan 3.Cuacaektrim.webp
   },
   { 
     id: 4, 
@@ -52,8 +56,7 @@ const initialIncidentData = [
     severity: 'Tinggi', 
     description: 'Pintu air Mulyorejo dibuka penuh karena debit air sungai meningkat drastis. Beberapa pemukiman warga tergenang air.',
     status: 'Penanganan',
-    // Gambar banjir di perumahan Surabaya Timur
-    image: 'https://awsimages.detik.net.id/community/media/visual/2022/11/02/banjir-surabaya-timur_169.jpeg?w=700&q=90'
+    image: imgBanjir // Menggunakan 1.Bajir.png
   },
   { 
     id: 5, 
@@ -64,8 +67,7 @@ const initialIncidentData = [
     severity: 'Sedang', 
     description: 'Kepadatan luar biasa akibat perbaikan aspal di jalan utama arah masuk kota Surabaya. Antrean kendaraan mencapai 3 KM.',
     status: 'Waspada',
-    // Gambar kemacetan ikonik Bundaran Waru SBY
-    image: 'https://asset.kompas.com/crops/mO_X2R8_W-fMhN0Y_V_h8-XWp2U=/0x0:1000x667/750x500/data/photo/2021/07/05/60e2946c986c0.jpg'
+    image: imgMacet // Menggunakan 4.macet.jpg
   },
   { 
     id: 6, 
@@ -76,8 +78,7 @@ const initialIncidentData = [
     severity: 'Rendah', 
     description: 'Dahan pohon tumbang menghalangi jalur pedestrian dan parkir di Jl. Tunjungan. Arus lalu lintas tersendat namun lancar.',
     status: 'Aktif',
-    // Gambar Jalan Tunjungan SBY
-    image: 'https://bisnisjatim.id/wp-content/uploads/2024/01/Pohon-Tumbang-Tunjungan.jpg'
+    image: imgPohon // Menggunakan 5.pohontumbang.jpeg
   }
 ];
 
@@ -90,7 +91,6 @@ const DetailModal = ({ incident, onClose }) => {
 
     return (
         <div className="fixed inset-0 z-[2000] flex items-center justify-center p-4" onClick={onClose}>
-            {/* Shadow diperkuat agar modal tetap kontras meskipun background transparan */}
             <div 
                 className="bg-white rounded-lg w-full max-w-lg shadow-[0_0_60px_rgba(0,0,0,0.3)] border border-gray-200 overflow-hidden animate-in fade-in zoom-in duration-200" 
                 onClick={(e) => e.stopPropagation()}
