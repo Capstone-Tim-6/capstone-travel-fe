@@ -1,7 +1,7 @@
-// api.js - TIDAK ada JSX di sini, murni JavaScript
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_API_URL || "https://travbe.vercel.app";
+// Konfigurasi Dasar
+const API_URL = "https://travbe.vercel.app";
 
 const api = axios.create({
   baseURL: API_URL,
@@ -10,37 +10,46 @@ const api = axios.create({
   },
 });
 
-// ===== Auth token helpers =====
-const TOKEN_KEY = 'travsecure_token';
+// Helper Token
+export const getToken = () => localStorage.getItem('travsecure_token');
+export const setToken = (token) => localStorage.setItem('travsecure_token', token);
+export const clearToken = () => localStorage.removeItem('travsecure_token');
 
-export const getToken = () => localStorage.getItem(TOKEN_KEY);
-export const setToken = (token) => localStorage.setItem(TOKEN_KEY, token);
-export const clearToken = () => localStorage.removeItem(TOKEN_KEY);
+// Interceptor: Otomatis tempel token di setiap request
+api.interceptors.request.use((config) => {
+  const token = getToken();
+  if (token) config.headers.Authorization = `Bearer ${token}`;
+  return config;
+});
 
-// ===== Axios interceptors =====
-api.interceptors.request.use(
-  (config) => {
-    const token = getToken();
-    if (token) {
-      config.headers = config.headers || {};
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error) => Promise.reject(error)
-);
-
+// Interceptor: Normalisasi Error
 api.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    // Normalisasi error agar UI enak dipakai
-    const message =
-      error?.response?.data?.message ||
-      error?.response?.data ||
-      error?.message ||
-      'Request failed';
-    return Promise.reject({ ...error, friendlyMessage: message });
+  (res) => res,
+  (err) => {
+    const msg = err?.response?.data?.message || err?.message || 'Gagal terhubung ke server';
+    return Promise.reject({ ...err, friendlyMessage: msg });
   }
 );
+
+// ==========================================
+// SEMUA ENDPOINT API
+// ==========================================
+
+// Auth
+export const loginUser = (data) => api.post('/api/auth/login', data);
+export const signupUser = (data) => api.post('/api/auth/signup', data);
+
+// Destinasi
+export const getDestinations = () => api.get('/api/destinations');
+export const searchDestination = (name) => api.get(`/api/destinations/search?name=${name}`);
+export const getDestinationDetail = (id) => api.get(`/api/destinations/${id}`);
+
+// Safety & Reviews
+export const getNotifications = () => api.get('/api/notifications');
+export const getReviews = () => api.get('/api/destinations/review');
+
+// UNTUK KIRIM LAPORAN: 
+// Jika /api/reports error 404, coba ganti ke /api/destinations/review
+export const postReport = (data) => api.post('/api/reports', data); 
 
 export default api;
